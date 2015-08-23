@@ -1,0 +1,17 @@
+<<<<<<< HEAD
+/customAccessTokenHandler.iml
+/.idea
+=======
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+>>>>>>> eb2cb2931100e22ec58ea9677b8d8788c7074807
