@@ -32,22 +32,23 @@ public class CustomAccessTokenHandler extends AbstractHandler implements Managed
 		}
 
 		//remove the query parameter
+		if(accessToken != null && !"".equals(accessToken)) {
+			String rest_url_postfix = (String) axis2MC.getProperty(NhttpConstants.REST_URL_POSTFIX);
+			rest_url_postfix = removeTokenFromQueryParameters(rest_url_postfix, accessToken);
+			axis2MC.setProperty(NhttpConstants.REST_URL_POSTFIX, rest_url_postfix);
 
-		String rest_url_postfix = (String) axis2MC.getProperty(NhttpConstants.REST_URL_POSTFIX);
-		rest_url_postfix = removeTokenFromQueryParameters(rest_url_postfix, accessToken);
-		axis2MC.setProperty(NhttpConstants.REST_URL_POSTFIX, rest_url_postfix);
+			//set authorization bearer header to use for the api authentication
 
-		//set authorization bearer header to use for the api authentication
+			Map headers =
+					(Map) axis2MC.getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
+			if (headers != null) {
+				headers.put("Authorization", "Bearer " + accessToken);
 
-		Map headers =
-				(Map) axis2MC.getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
-		if (headers != null) {
-			headers.put("Authorization", "Bearer " + accessToken);
-
-		} else {
-			headers = new HashMap<String, String>();
-			headers.put("Authorization", "Bearer " + accessToken);
-			axis2MC.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS, headers);
+			} else {
+				headers = new HashMap<String, String>();
+				headers.put("Authorization", "Bearer " + accessToken);
+				axis2MC.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS, headers);
+			}
 		}
 		return true;
 	}
