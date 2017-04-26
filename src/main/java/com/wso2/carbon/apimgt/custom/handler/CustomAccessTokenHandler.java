@@ -20,13 +20,15 @@ import java.util.Map;
 public class CustomAccessTokenHandler extends AbstractHandler implements ManagedLifecycle {
 	private static final Log log = LogFactory.getLog(CustomAccessTokenHandler.class);
 
+	private String authorizationQueryParamName = "access-token";
+
 	@Override
 	public boolean handleRequest(MessageContext messageContext) {
 		org.apache.axis2.context.MessageContext axis2MC =
 				((Axis2MessageContext) messageContext).getAxis2MessageContext();
 		String accessToken = "";
 		try {
-			accessToken = new SynapseXPath("$url:access-token").stringValueOf(messageContext);
+			accessToken = new SynapseXPath("$url:" + authorizationQueryParamName).stringValueOf(messageContext);
 		} catch (JaxenException e) {
 			log.error("couldn't found token in query parameters", e);
 		}
@@ -75,5 +77,13 @@ public class CustomAccessTokenHandler extends AbstractHandler implements Managed
 			input = input.replace("?", "");
 		}
 		return input;
+	}
+
+	public String getAuthorizationQueryParamName() {
+		return authorizationQueryParamName;
+	}
+
+	public void setAuthorizationQueryParamName(String authorizationQueryParamName) {
+		this.authorizationQueryParamName = authorizationQueryParamName;
 	}
 }
